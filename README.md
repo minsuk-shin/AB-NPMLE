@@ -15,7 +15,7 @@ pip install -r requirements.txt
 
 **PyTorch (GPU) is installed separately**
 PyTorch was installed separately with `--extra-index-url https://download.pytorch.org/whl/cu130` (CUDA 13.0).
-If this doesn't match your driver, install the build that fits your setup instead.
+If this doesn't match your driver, install the build that fits your setup instead. Apple Silicon (MPS) is also supported.
 
 R (for `eval/wasstest.R`):
 
