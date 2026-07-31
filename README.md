@@ -15,7 +15,26 @@ pip install -r requirements.txt
 
 **PyTorch (GPU) is installed separately**
 PyTorch was installed separately with `--extra-index-url https://download.pytorch.org/whl/cu130` (CUDA 13.0).
-If this doesn't match your driver, install the build that fits your setup instead. Apple Silicon (MPS) is also supported.
+If this doesn't match your driver, install the build that fits your setup instead.
+
+`train.py`, `infer.py`, and `mdv.py` all pick the device automatically at
+import time (`cuda` if available, else `mps`, else `cpu`) — no `--device`
+flag is needed, and none of the example commands below change. On Apple
+Silicon, just install the standard (non-CUDA) PyTorch build:
+
+```bash
+pip install torch
+```
+
+Do **not** use the `--extra-index-url` above on macOS/MPS; that index only
+hosts CUDA builds.
+
+> There is no `--device` flag — the scripts only auto-detect in the order
+> `cuda` → `mps` → `cpu`. On a Mac this already means MPS is picked
+> automatically (no CUDA to compete with). To force a specific device
+> anyway, either edit the `device = ...` lines near the top of `train.py`,
+> `infer.py`, and `mdv.py` directly, or hide CUDA from `torch` first, e.g.
+> `CUDA_VISIBLE_DEVICES="" python train.py ...` to fall through to `mps`/`cpu`.
 
 R (for `eval/wasstest.R`):
 
