@@ -50,6 +50,7 @@ install.packages("twosamples")
 ├── train.py                     # trains AMEM-Net (AB-NPMLE)
 ├── infer.py                     # bootstrap inference with a trained checkpoint
 ├── mdv.py                       # maximum deconvolvable variance (MDV) comparison
+├── sigma_sensitivity.py         # sigma sensitivity check (AB-NPMLE vs NPMLE)
 ├── gen_data/                    # data generation (simulated + real)
 │   ├── gen_sim_data.py          # simulation data generation
 │   ├── gen_real_data.R          # downloads + QCs the GIANT height GWAS data
@@ -206,6 +207,19 @@ python eval/functional_ci.py \
 # Marginal-sample two-sample tests (across all 50 datasets)
 python eval/kstest.py       # edit DATA_NAME at the top of the file
 Rscript eval/wasstest.R           # edit DATA_NAME at the top of the file
+
+# Sigma sensitivity: checks whether AB-NPMLE tracks NPMLE as sigma changes.
+# NB: lives at repo root, not eval/. First fit NPMLE once per sigma
+# candidate via run_npmle_sim_iter.py (matching sigma, separate output dir
+# -- see --help), then pass those result_npmle_*.npz to --npmle_paths.
+python sigma_sensitivity.py --data_name WCS1_Normal \
+    --ckpt_path ./sim_data_gms_1000/data1/WCS1_Normal/checkpoint_AMEM_WCS1_Normal.pth \
+    --sigma_candidates 0.5 0.8 1.0 \
+    --npmle_paths ./sim_data_npmle_std0.5/data1/result_npmle_WCS1_Normal.npz \
+                  ./sim_data_npmle_std0.8/data1/result_npmle_WCS1_Normal.npz \
+                  ./sim_data_npmle/data1/result_npmle_WCS1_Normal.npz \
+    --n_bootstrap 1000 \
+    --result_dir ./plots_sigma/WCS1_Normal
 ```
 
 All commands above assume they are run from the repository root.
