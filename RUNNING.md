@@ -12,7 +12,7 @@ Numerical NPMLE and MDV need a working MOSEK license. GB training and CUDA EM ne
 
 ## Main simulation workflow
 
-These examples use `WCS1_Normal`, `data1`, `n=1000`, `sigma=1`, and 1,000 bootstrap samples. Repeat for other data indices/scenarios as needed. For AMEM, `--num_group 1000` equals `n`, allowing reuse of the numerical NPMLE bootstrap weights. Smaller group sizes generate their own inference weights.
+These examples use `WCS1_Normal`, `data1`, `n=1000`, `sigma=1`, and 1,000 bootstrap samples. Repeat for other data indices/scenarios as needed. AMEM and GB training default to `--seed 1001 --paired-weight-seed 1001`, matching the no-all-one training runs; their all-one insertion intervals default to `0`. For AMEM, `--num_group 1000` equals `n`, allowing reuse of the numerical NPMLE bootstrap weights. Smaller group sizes generate their own inference weights.
 
 ### 1. Generate data
 

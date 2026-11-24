@@ -3,6 +3,7 @@ import time
 import math
 import argparse
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 import numpy as np
 import torch
@@ -103,7 +104,9 @@ def train_model(model, X, B, m, n, epochs, device, checkpoint_path, model_name="
         if w_ones_interval and (t + 1) % w_ones_interval == 0:
             w[0].fill_(1.0)
 
-        with torch.amp.autocast(device.type, dtype=torch.bfloat16, enabled=(device.type != "cpu")):
+        amp_context = (torch.amp.autocast("cuda", dtype=torch.bfloat16)
+                       if device.type == "cuda" else nullcontext())
+        with amp_context:
             prob, support = model(sigma, w)
             loss = EM_based_loss(X, support, prob, sigma, w)
 
@@ -198,9 +201,9 @@ def main():
                          help='Sample training sigma from Uniform(0, 2) instead of Uniform(0, 1) '
                               '(i.e. sigma * 2). Used to prepare a checkpoint for MDV evaluation '
                               '(mdv.py), which sweeps sigma up to ~2.5.')
-    parser.add_argument('--seed', type=int, default=None,
+    parser.add_argument('--seed', type=int, default=1001,
                          help='Seed for reproducible model initialization and training samples.')
-    parser.add_argument('--paired-weight-seed', type=int, default=None,
+    parser.add_argument('--paired-weight-seed', type=int, default=1001,
                         help='Match GB multinomial weight draws at every training iteration')
     parser.add_argument('--w-ones-every', type=int, default=DEFAULT_W_ONES_INTERVAL,
                         help='Replace the first weight vector with all ones every N iterations; 0 disables this')

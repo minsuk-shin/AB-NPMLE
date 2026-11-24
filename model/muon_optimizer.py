@@ -43,7 +43,7 @@ import torch.distributed as dist
 def zeropower_via_newtonschulz5(G, steps: int):
     assert G.ndim >= 2
     a, b, c = (3.4445, -4.7750,  2.0315)
-    X = G.bfloat16()
+    X = G.float() if G.device.type == "mps" else G.bfloat16()
     if G.size(-2) > G.size(-1):
         X = X.mT
     X = X / (X.norm(dim=(-2, -1), keepdim=True) + 1e-7)
