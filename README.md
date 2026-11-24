@@ -1,4 +1,4 @@
-# AMEM-Net (Amortized Mixture–EM Network)
+# Amortized Mixture–EM Networks for Bootstrap Inference in Nonparametric Maximum Likelihood Estimation
 
 AMEM-Net learns a finite mixing distribution from a candidate noise standard deviation and bootstrap weights. This repository also includes numerical NPMLE and GB-NPMLE baselines, data generators, and evaluation scripts.
 
