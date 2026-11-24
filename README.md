@@ -1,4 +1,4 @@
-# AMEM-Net: Amortized Bootstrap NPMLE
+# AMEM-Net
 
 AMEM-Net learns a finite mixing distribution from a candidate noise standard deviation and bootstrap weights. This repository also contains a numerical NPMLE baseline, a GB-NPMLE baseline, data generators, and evaluation scripts.
 
