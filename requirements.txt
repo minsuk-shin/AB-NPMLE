@@ -1,0 +1,8 @@
+torch
+numpy
+pandas
+scipy
+matplotlib
+seaborn
+npeb==0.0.2
+Mosek
