@@ -41,6 +41,9 @@ def GB_NPMLE_Sampling(fit, Boot_size, W=None, Device=None, Return_details=False,
     Generation_start = time.perf_counter()
     with torch.no_grad(): 
       if Component_mode == 'multinomial':
+        # Unlike the original fixed-count allocation from tau, draw each component
+        # directly from the discrete distribution with a multinomial draw. AMEM
+        # also samples from its given discrete distribution in this experiment.
         tau_prob = torch.as_tensor(tau, device=device, dtype=torch.float32).reshape(-1)
         if (tau_prob.numel() != k or not bool(torch.isfinite(tau_prob).all()) or
             bool((tau_prob < 0).any()) or float(tau_prob.sum()) <= 0):

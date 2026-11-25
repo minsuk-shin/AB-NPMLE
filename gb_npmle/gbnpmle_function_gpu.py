@@ -198,6 +198,9 @@ Last_only=False, Paired_weight_seed=None):
     if Paired_weight_seed is None:
       w, w_m = dirichlet(s=s, n=n, m=N, M=m, device=device)
     else:
+      # Unlike the original exponential bootstrap weights, use AMEM's bootstrap
+      # weight sampler with a fixed per-iteration seed so both methods use the
+      # same sampled w at each training iteration.
       w_s = draw_paired_weights(N, s, device, Paired_weight_seed, it,
                                 generate_bootstrap_weights).squeeze(1)
       w = w_s.repeat_interleave(m, dim=0)
@@ -428,8 +431,8 @@ def main():
     parser.add_argument("--num-group", type=int, default=None,
                         help="weight group count; defaults to n")
     parser.add_argument("--device-index", type=int, default=0)
-    parser.add_argument("--seed", type=int, default=2021)
-    parser.add_argument("--paired-weight-seed", type=int, default=None,
+    parser.add_argument("--seed", type=int, default=1001)
+    parser.add_argument("--paired-weight-seed", type=int, default=1001,
                         help="Use the same multinomial weights as train.py")
     parser.add_argument("--one-ones-every", type=int, default=0,
                         help="Set the first weight vector to all ones every K iterations; 0 disables it")
@@ -507,7 +510,7 @@ def batch_main():
     parser.add_argument("--device-index", type=int, choices=(0, 1), required=True)
     parser.add_argument("--iterations", type=int, default=30000)
     parser.add_argument("--weight-batch-size", type=int, default=128)
-    parser.add_argument("--seed", type=int, default=2021)
+    parser.add_argument("--seed", type=int, default=1001)
     args = parser.parse_args(sys.argv[2:])
     data_root = args.data_root.resolve()
     output_root = args.output_root.resolve()
